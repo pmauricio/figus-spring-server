@@ -1,8 +1,14 @@
 package figus.client;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import figus.item.Item;
+import figus.user.User;
 
 @Entity
 public class Client {
@@ -41,4 +47,10 @@ public class Client {
                 ", name='" + name + '\'' +
                 '}';
     }
+    
+    @OneToMany(mappedBy = "owner")
+    private List<Item> items;
+    
+    @OneToMany(mappedBy = "owner")
+    private List<User> users;
 }

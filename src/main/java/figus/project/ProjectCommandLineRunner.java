@@ -17,10 +17,10 @@ public class ProjectCommandLineRunner implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         // Top beers from https://www.beeradvocate.com/lists/top/
-        Stream.of("The Godfather", "Her", "Bye Bye Brasil", "King Julius",
-                "Better Call Saul", "PBR","la Escondida","la de Mauricio").forEach(name ->
-                repository.save(new Project(name))
-        );
+//        Stream.of("The Godfather", "Her", "Bye Bye Brasil", "King Julius",
+//                "Better Call Saul", "PBR","la Escondida","la de Mauricio").forEach(name ->
+//                repository.save(new Project(name))
+//        );
         repository.findAll().forEach(System.out::println);
     }
 }
