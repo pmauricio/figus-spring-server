@@ -18,6 +18,9 @@ public class User {
     @GeneratedValue
     private Long id;
     private String name;
+    private String email;
+    
+    
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="OWNER_ID")
     private Client owner;
@@ -25,8 +28,9 @@ public class User {
     
     public User() {}
 
-    public User(String name) {
+    public User(String name,String email) {
         this.name = name;
+        this.name = email;
     }
 
     public Long getId() {
@@ -52,4 +56,12 @@ public class User {
                 ", name='" + name + '\'' +
                 '}';
     }
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

@@ -21,12 +21,12 @@ public class UserCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        // Top beers from https://www.beeradvocate.com/lists/top/
+//      //   Top beers from https://www.beeradvocate.com/lists/top/
 //        Stream.of("Mauricio").forEach(name ->
-//                repository.save(new User(name))
+//                repository.save(new User(name,""))
 //        );
-    	
-        repository.findAll().forEach(System.out::println);
-      
-    }
+//    	
+//        repository.findAll().forEach(System.out::println);
+//      
+   }
 }
