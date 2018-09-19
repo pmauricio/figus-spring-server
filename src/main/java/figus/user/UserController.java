@@ -2,6 +2,9 @@ package figus.user;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -47,34 +50,42 @@ public class UserController {
 //          
 //    	return (String) session.getAttribute("logged_user");
 //    }
-	@PostMapping("/login")
-	public String login() {
+	@RequestMapping(
+		    value = "/login", 
+		    method = RequestMethod.POST,
+		    consumes = "text/plain")
+	public String login(@RequestBody String payload) {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 
-		StringBuilder sb = new StringBuilder();
-		BufferedReader reader;
-		try {
-			reader = request.getReader();
-
-			String line;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append('\n');
-
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		System.out.println(sb.toString());
-
+		
+	    System.out.println(payload);
+	    //System.out.println(request.getParameterNames().nextElement());
+		
 		HttpSession session = request.getSession(true);
 		session.setAttribute("logged_user", repository.findAll().get(0).getName());
 		session.setAttribute("logged_user_id", repository.findAll().get(0).getId());
 		System.out.println(session.getAttribute("logged_user"));
+		session.setAttribute("login",payload);
+		return payload;
+	}
+	@RequestMapping(
+		    value = "/login", 
+		    method = RequestMethod.GET,
+		    consumes = "text/plain")
+	public String loginGet() {
 
-		return "{\"usuario\":\""+(String) session.getAttribute("logged_user")+"\"}";
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+
+		HttpSession session = request.getSession(true);
+		System.out.println("GET:"+session.getAttribute("login"));
+//		System.out.println(payload);
+	    //System.out.println(request.getParameterNames().nextElement());
+		
+	
+		return (String) session.getAttribute("login");
+	
 	}
 }
