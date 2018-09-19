@@ -38,54 +38,27 @@ public class UserController {
 				&& !user.getName().equals("PBR");
 	}
 
-//    @GetMapping("/login")
-//    public String login() {
-//   
-//    	  HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-//
-//          HttpSession session = request.getSession(true);
-//          session.setAttribute("logged_user", repository.findAll().get(0).getName());
-//          session.setAttribute("logged_user_id", repository.findAll().get(0).getId());
-//          System.out.println(session.getAttribute("logged_user"));
-//          
-//    	return (String) session.getAttribute("logged_user");
-//    }
-	@RequestMapping(
-		    value = "/login", 
-		    method = RequestMethod.POST,
-		    consumes = "text/plain")
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "text/plain")
 	public String login(@RequestBody String payload) {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 
-		
-	    System.out.println(payload);
-	    //System.out.println(request.getParameterNames().nextElement());
-		
+		System.out.println(payload);
 		HttpSession session = request.getSession(true);
-		session.setAttribute("logged_user", repository.findAll().get(0).getName());
-		session.setAttribute("logged_user_id", repository.findAll().get(0).getId());
-		System.out.println(session.getAttribute("logged_user"));
-		session.setAttribute("login",payload);
+		session.setAttribute("login", payload);
 		return payload;
 	}
-	@RequestMapping(
-		    value = "/login", 
-		    method = RequestMethod.GET,
-		    consumes = "text/plain")
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET, consumes = "text/plain")
 	public String loginGet() {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 
 		HttpSession session = request.getSession(true);
-		System.out.println("GET:"+session.getAttribute("login"));
-//		System.out.println(payload);
-	    //System.out.println(request.getParameterNames().nextElement());
-		
-	
+		System.out.println("GET:" + session.getAttribute("login"));
 		return (String) session.getAttribute("login");
-	
+
 	}
 }
