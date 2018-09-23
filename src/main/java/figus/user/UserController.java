@@ -77,11 +77,11 @@ public class UserController {
 		ProcessBuilder builder = new ProcessBuilder();
 		if (isOSX) {
 			System.out.println("is osx");
-			builder.command("pwd");
+			builder.command("pwd ");
 		} else {
 			builder.command("./journalctl ", " -u ", "figusserver.service");
 		}
-		builder.directory(new File(System.getProperty("user.home")));
+	//	builder.directory(new File(System.getProperty("user.home")));
 		Process process;
 		try {
 			process = builder.start();
