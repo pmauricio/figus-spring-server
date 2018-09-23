@@ -67,44 +67,43 @@ public class UserController {
 		return (String) session.getAttribute("login");
 
 	}
-	
+
 	@GetMapping("/console")
 	public String console() {
 
-		System.out.println("CONSOLE:"+System.getProperty("os.name"));
-		boolean isOSX = System.getProperty("os.name")
-				  .toLowerCase().startsWith("mac");
-		
+		System.out.println("CONSOLE:" + System.getProperty("os.name"));
+		boolean isOSX = System.getProperty("os.name").toLowerCase().startsWith("mac");
+
 		ProcessBuilder builder = new ProcessBuilder();
 		if (isOSX) {
 			System.out.println("is osx");
-		    builder.command("pwd");
+			builder.command("pwd");
 		} else {
-		    builder.command("./journalctl ", " -u ", "figusserver.service");
+			builder.command("./journalctl ", " -u ", "figusserver.service");
 		}
 		builder.directory(new File(System.getProperty("user.home")));
 		Process process;
 		try {
 			process = builder.start();
-	
-		StringBuffer	 sb = new StringBuffer("");
-		Consumer<String> d = e -> sb.append(e);
-		
-		StreamGobbler streamGobbler = 	
-		  new StreamGobbler(process.getInputStream(), d);
-		Executors.newSingleThreadExecutor().submit(streamGobbler);
+
+			StringBuffer sb = new StringBuffer("");
+			Consumer<String> d = e -> sb.append(e);
+
+			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), d);
+			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			int exitCode = process.waitFor();
 			assert exitCode == 0;
-	
+
 			return sb.toString();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return e.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return e.getMessage();
 		}
-		return "";
 	}
 
 	private static class StreamGobbler implements Runnable {
