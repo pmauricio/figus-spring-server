@@ -80,7 +80,7 @@ public class UserController {
 			System.out.println("is osx");
 		    builder.command("pwd");
 		} else {
-		    builder.command("journalctl ", " -u ", "figusserver.service");
+		    builder.command("./journalctl ", " -u ", "figusserver.service");
 		}
 		builder.directory(new File(System.getProperty("user.home")));
 		Process process;
