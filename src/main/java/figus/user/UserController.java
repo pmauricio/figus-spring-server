@@ -68,6 +68,17 @@ public class UserController {
 
 	}
 
+	@GetMapping("/logout")
+	public String logout() {
+
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
+		System.out.println(")logout");
+		request.getSession(true).invalidate();
+		return "{}";
+
+	}
+
 	@GetMapping("/console")
 	public String console() {
 
@@ -81,7 +92,7 @@ public class UserController {
 		} else {
 			builder.command("journalctl ", " -u ", "figusserver.service");
 		}
-	//	builder.directory(new File(System.getProperty("user.home")));
+		// builder.directory(new File(System.getProperty("user.home")));
 		Process process;
 		try {
 			process = builder.start();

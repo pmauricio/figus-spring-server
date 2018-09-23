@@ -19,6 +19,7 @@ public class User {
     private Long id;
     private String name;
     private String email;
+    private String paa;
     
     
     @ManyToOne(fetch=FetchType.LAZY)
@@ -63,5 +64,13 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPaa() {
+		return paa;
+	}
+
+	public void setPaa(String paa) {
+		this.paa = paa;
 	}
 }
