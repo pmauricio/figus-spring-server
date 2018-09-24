@@ -18,13 +18,16 @@ public class ProjectController {
 
     @GetMapping("/projects")
     public Collection<Project> projects() {
+    	
+    	
         return repository.findAll().stream()
                 .filter(this::isGreat)
                 .collect(Collectors.toList());
     }
 
     private boolean isGreat(Project project) {
-        return !project.getName().equals("Budweiser") &&
+        return 
+        		!project.getName().equals("Budweiser") &&
                 !project.getName().equals("Coors Light") &&
                 !project.getName().equals("PBR");
     }

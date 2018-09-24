@@ -1,8 +1,18 @@
 package figus.user;
 
-import org.springframework.http.MediaType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,21 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class UserController {
@@ -34,7 +31,7 @@ public class UserController {
 		this.repository = repository;
 	}
 
-	@GetMapping("/user")
+	@GetMapping("/api/user")
 	public Collection<User> users() {
 		return repository.findAll().stream().filter(this::isGreat).collect(Collectors.toList());
 	}
@@ -44,8 +41,8 @@ public class UserController {
 				&& !user.getName().equals("PBR");
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "text/plain")
-	public String login(@RequestBody String payload) {
+	@RequestMapping(value = "/api/login", method = RequestMethod.POST)
+	public User login(@RequestBody String payload) {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
@@ -53,22 +50,56 @@ public class UserController {
 		System.out.println(payload);
 		HttpSession session = request.getSession(true);
 		session.setAttribute("login", payload);
-		return payload;
+
+		try {
+
+			// get a String from the JSON object
+
+			ObjectMapper mapper = new ObjectMapper();
+			User u = mapper.readValue(payload, User.class);
+			System.out.println("The first name is: " + u.getEmail());
+
+			User uBD = repository.findByEmail(u.getEmail());
+			if (uBD == null) {
+				System.out.println("to save");
+				repository.save(u);
+				System.out.println("saved");
+				uBD = repository.findByEmail(u.getEmail());
+				System.out.println(uBD);
+				session.setAttribute("login", uBD);
+				return uBD;
+			}else {
+				System.out.println("logged"+uBD);
+				
+				session.setAttribute("login", uBD);
+				System.out.println("logged ok");
+				return uBD;
+				
+			}
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET, consumes = "text/plain")
-	public String loginGet() {
+	@RequestMapping(value = "/api/login", method = RequestMethod.GET, consumes = "text/plain")
+	public User loginGet() {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 
 		HttpSession session = request.getSession(true);
 		System.out.println("GET:" + session.getAttribute("login"));
-		return (String) session.getAttribute("login");
+		return  (User) session.getAttribute("login");
 
 	}
 
-	@GetMapping("/logout")
+	@GetMapping("/api/logout")
 	public String logout() {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
@@ -79,7 +110,7 @@ public class UserController {
 
 	}
 
-	@GetMapping("/console")
+	@GetMapping("/api/console")
 	public String console() {
 
 		System.out.println("CONSOLE:" + System.getProperty("os.name"));

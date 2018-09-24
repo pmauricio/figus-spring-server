@@ -1,26 +1,35 @@
 package figus.user;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import figus.client.Client;
+import figus.project.Project;
 
 @Entity
 @Table(name="`User`")
-public class User {
+public class User implements Serializable{
 
-    @Id
+   
+	private static final long serialVersionUID = 7378726688506782812L;
+	@Id
     @GeneratedValue
     private Long id;
     private String name;
     private String email;
     private String paa;
     
+    @OneToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="ID")
+    private Project actualProject;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="OWNER_ID")
@@ -52,9 +61,11 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                   ", email='" + email + '\'' +
+                    ", paa='" + paa + '\'' +
                 '}';
     }
 
@@ -73,4 +84,14 @@ public class User {
 	public void setPaa(String paa) {
 		this.paa = paa;
 	}
+
+	public Project getActualProject() {
+		return actualProject;
+	}
+
+	public void setActualProject(Project actualProject) {
+		this.actualProject = actualProject;
+	}
+	
+	
 }
