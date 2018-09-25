@@ -2,6 +2,10 @@ package figus.project;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import figus.user.User;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,25 +14,35 @@ import java.util.stream.Collectors;
 
 @RestController
 public class ProjectController {
-    private ProjectRepository repository;
+	private ProjectRepository repository;
 
-    public ProjectController(ProjectRepository repository) {
-        this.repository = repository;
-    }
+	public ProjectController(ProjectRepository repository) {
+		this.repository = repository;
+	}
 
-    @GetMapping("/projects")
-    public Collection<Project> projects() {
-    	
-    	
-        return repository.findAll().stream()
-                .filter(this::isGreat)
-                .collect(Collectors.toList());
-    }
+	@GetMapping("/api/projects")
+	public Collection<Project> projects() {
 
-    private boolean isGreat(Project project) {
-        return 
-        		!project.getName().equals("Budweiser") &&
-                !project.getName().equals("Coors Light") &&
-                !project.getName().equals("PBR");
-    }
+	
+System.out.println( "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$==========\n"+
+	
+	
+		(((User)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("login"))))   ;
+System.out.println(((User)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("login")).getActualClient());	
+System.out.println( "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$==========");
+return ((User) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest().getSession().getAttribute("login")).getActualClient().getProjects();
+	}
+
+//	private boolean isGreat(Project project) {
+//
+//		if (project.getClient() != null) {
+//			System.out.println("["+((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+//			.getRequest().getSession().getAttribute("login")+"]");
+//			return project.getClient()
+//					.getId() == ((User) ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+//							.getRequest().getSession().getAttribute("login")).getActualClient().getId();
+//		}else
+//			return false;
+//	}
 }

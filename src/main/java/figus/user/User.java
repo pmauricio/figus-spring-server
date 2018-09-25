@@ -28,15 +28,23 @@ public class User implements Serializable{
     private String paa;
     
     @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="ID")
+    @JoinColumn(name="ACTUAL_PROJECT_ID")
     private Project actualProject;
     
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="OWNER_ID")
-    private Client owner;
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="ACTUAL_CLIENT_ID")
+    private Client actualClient;
     
     
-    public User() {}
+    public Client getActualClient() {
+		return actualClient;
+	}
+
+	public void setActualClient(Client actualClient) {
+		this.actualClient = actualClient;
+	}
+
+	public User() {}
 
     public User(String name,String email) {
         this.name = name;
@@ -66,6 +74,7 @@ public class User implements Serializable{
                 ", name='" + name + '\'' +
                    ", email='" + email + '\'' +
                     ", paa='" + paa + '\'' +
+                      ", actualClient='" + actualClient + '\'' +
                 '}';
     }
 

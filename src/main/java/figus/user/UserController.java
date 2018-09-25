@@ -60,6 +60,7 @@ public class UserController {
 			System.out.println("The first name is: " + u.getEmail());
 
 			User uBD = repository.findByEmail(u.getEmail());
+			
 			if (uBD == null) {
 				System.out.println("to save");
 				repository.save(u);
@@ -69,6 +70,7 @@ public class UserController {
 				session.setAttribute("login", uBD);
 				return uBD;
 			}else {
+				
 				System.out.println("logged"+uBD);
 				
 				session.setAttribute("login", uBD);
@@ -94,7 +96,7 @@ public class UserController {
 				.getRequest();
 
 		HttpSession session = request.getSession(true);
-		System.out.println("GET:" + session.getAttribute("login"));
+		System.out.println("Logged:" + session.getAttribute("login"));
 		return  (User) session.getAttribute("login");
 
 	}
@@ -105,7 +107,7 @@ public class UserController {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
 		System.out.println(")logout");
-		request.getSession(true).invalidate();
+		request.getSession().invalidate();
 		return "{}";
 
 	}

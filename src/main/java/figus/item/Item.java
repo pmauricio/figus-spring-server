@@ -1,5 +1,7 @@
 package figus.item;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,9 +12,11 @@ import javax.persistence.ManyToOne;
 import figus.client.Client;
 
 @Entity
-public class Item {
+public class Item implements Serializable{
 
-    @Id
+  
+	private static final long serialVersionUID = -5543706657101060796L;
+	@Id
     @GeneratedValue
     private Long id;
     private String name;
