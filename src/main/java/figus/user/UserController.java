@@ -94,10 +94,10 @@ public class UserController {
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
-
+	
 		HttpSession session = request.getSession(true);
 		System.out.println("Logged:" + session.getAttribute("login"));
-		return  (User) session.getAttribute("login");
+		return  repository.findByEmail(((User) session.getAttribute("login")).getEmail());
 
 	}
 
