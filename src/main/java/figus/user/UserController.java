@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,11 +33,26 @@ public class UserController {
 		this.repository = repository;
 	}
 
+	
 	@GetMapping("/api/user")
 	public Collection<User> users() {
 		return repository.findAll().stream().filter(this::isGreat).collect(Collectors.toList());
 	}
 
+	@RequestMapping(value = "/api/user", method = RequestMethod.POST)
+	public User updateUser(@RequestBody String payload) {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		User user = null;
+		try {
+			user = mapper.readValue(payload, User.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(">>>>>>>>>>>>>>>"+payload);
+	    return repository.saveAndFlush(user);
+	}
 	private boolean isGreat(User user) {
 		return !user.getName().equals("Budweiser") && !user.getName().equals("Coors Light")
 				&& !user.getName().equals("PBR");
